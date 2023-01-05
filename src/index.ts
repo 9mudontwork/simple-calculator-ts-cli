@@ -58,7 +58,7 @@ function askContinue() {
 }
 
 function askNumber() {
-	readline.question(`What is your number?\n`, (inputNumber: string) => {
+	readline.question(`Choose your number.\n`, (inputNumber: string) => {
 		if (isNaN(Number(inputNumber))) {
 			console.log('Invalid number. Please try again.')
 
@@ -84,7 +84,7 @@ function askNumber() {
 
 function askOperater() {
 	readline.question(
-		`What your operator need to do ? (+, -, *, /).\n`,
+		`Choose your operator ? (+, -, *, /).\n`,
 		(operator: State['operator']) => {
 			if (!validateOperator(operator)) {
 				console.log('Invalid operator. Please try again.')
