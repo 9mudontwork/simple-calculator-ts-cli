@@ -4,6 +4,8 @@ type State = {
 	operator: '+' | '-' | '*' | '/'
 	currentInputNumber: number
 	sum: number
+	isRequireOperator: boolean
+	isFirstNumber: boolean
 }
 
 const readline = createInterface({
@@ -15,9 +17,9 @@ let state: State = {
 	operator: '+',
 	currentInputNumber: 0,
 	sum: 0,
+	isRequireOperator: true,
+	isFirstNumber: true,
 }
-
-let isRequireOperator = true
 
 const operator = {
 	'+': () => (state.sum = state.sum + state.currentInputNumber),
@@ -45,7 +47,8 @@ function askContinue() {
 		}
 
 		if (answer === 'r') {
-			isRequireOperator = true
+			state.isRequireOperator = true
+			state.isFirstNumber = true
 			askNumber()
 			return
 		}
@@ -64,9 +67,14 @@ function askNumber() {
 
 		state.currentInputNumber = Number(inputNumber)
 
-		if (isRequireOperator) {
+		if (state.isFirstNumber) {
+			state.sum = state.currentInputNumber
+			state.isFirstNumber = false
+		}
+
+		if (state.isRequireOperator) {
 			askOperater()
-			isRequireOperator = false
+			state.isRequireOperator = false
 			return
 		}
 
