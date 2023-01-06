@@ -1,76 +1,33 @@
-import { CalculatorModel } from './model'
-import { CalculatorView } from './view'
+import { Calculator } from './calculator'
+import { MainAble } from './index'
 
-export class CalculatorController {
-	model: CalculatorModel
-	view: CalculatorView
+export class MainController {
+	private calculator: Calculator
+	private view: MainAble
 
-	constructor(model: CalculatorModel, view: CalculatorView) {
-		this.model = model
+	constructor(calculator: Calculator, view: MainAble) {
+		this.calculator = calculator
 		this.view = view
 	}
 
-	askNumber() {
-		this.view.askNumber((inputNumber) => {
-			if (isNaN(Number(inputNumber))) {
-				this.view.log('Invalid number. Please try again.')
+	execute(operator: string, number1: number, number2: number) {
+		if (operator === '+') {
+			const res = this.calculator.plus(number1, number2)
+			this.view.setResult(res)
+		} else if (operator === '-') {
+			const res = this.calculator.minus(number1, number2)
+			this.view.setResult(res)
+		} else if (operator === '*') {
+			const res = this.calculator.multiply(number1, number2)
+			this.view.setResult(res)
+		} else if (operator === '/') {
+			if (number2 === 0) {
+				this.view.setErrorMessage('divide by zero')
 				return
 			}
 
-			this.model.state.currentInputNumber = Number(inputNumber)
-
-			if (this.model.state.isFirstNumber) {
-				this.model.state.sum = this.model.state.currentInputNumber
-				this.model.state.isFirstNumber = false
-			}
-
-			if (this.model.state.isRequireOperator) {
-				this.askOperator()
-				this.model.state.isRequireOperator = false
-				return
-			}
-
-			this.calculate()
-		})
-	}
-
-	askOperator() {
-		this.view.askOperator((operator) => {
-			if (!this.model.validateOperator(operator)) {
-				this.view.log('Invalid operator. Please try again.')
-				return this.askOperator()
-			}
-
-			this.model.state.operator = operator
-			this.askNumber()
-		})
-	}
-
-	calculate() {
-		this.model.calculate()
-		this.view.log(`Result: ${this.model.state.sum}`)
-		this.askContinue()
-	}
-
-	askContinue() {
-		this.view.askContinue((answer) => {
-			if (answer === 'y') {
-				this.askOperator()
-				return
-			}
-
-			if (answer === 'r') {
-				this.model.state.isRequireOperator = true
-				this.model.state.isFirstNumber = true
-				this.askNumber()
-				return
-			}
-
-			this.view.close()
-		})
-	}
-
-	start() {
-		this.askNumber()
+			const res = this.calculator.divide(number1, number2)
+			this.view.setResult(res)
+		}
 	}
 }
